@@ -2,89 +2,68 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard – Recurly</title>
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter&family=Unna&family=Libre+Caslon+Display&family=Anonymous+Pro&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <title>Recurly Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" />
 </head>
+
 <body>
-
-<div class="dashboard">
-
-  <!-- SIDEBAR -->
+  <!-- LEFT SIDEBAR -->
   <aside class="sidebar">
     <h1 class="logo">RECURY</h1>
 
-    <p class="sidebar-text">
-      Track, control, and stay on top<br />
-      of every recurring payment from<br />
-      one place.
+    <p class="tagline">
+      Track, control, and stay on top of every recurring payment from one place.
     </p>
 
-    <a href="add-subscription.html" class="btn sidebar-btn">Add Subscription</a>
-    <a href="history.html" class="btn sidebar-btn">View History</a>
-    <a href="tracking.html" class="btn sidebar-btn">Track Spending</a>
+    <button class="btn">Add Subscription</button>
+    <button class="btn">View History</button>
+    <button class="btn">Track Spending</button>
 
-    <p class="sidebar-footer">
-      Manage. Track. Save.<br />
-      Secure subscription management<br />
-      © 2026 Recurly
-    </p>
+    <footer>
+      <p>Manage. Track. Save.</p>
+      <p>Secure subscription management</p>
+      <p>© 2026 Recurly</p>
+    </footer>
   </aside>
 
-  <!-- MAIN -->
-  <main class="dashboard-main">
-
-    <!-- HEADER -->
-    <header class="dashboard-header">
-      <div>
-        <h2>Hello Mehar,</h2>
-        <p class="muted">good to see you again</p>
-      </div>
-
-      <img src="assets/lp3.png" alt="Card preview" class="header-card" />
-    </header>
-
-    <!-- SUBSCRIPTION LIST -->
-    <section class="subscriptions">
-      <h3>SUBSCRIPTION LIST</h3>
-
-      <!-- ITEMS WILL BE INSERTED HERE FROM BACKEND -->
-
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <section class="header">
+      <h2>Hello Mehar,</h2>
+      <span>good to see you again</span>
     </section>
 
+    <section class="cards">
+      <img src="lp1.png" alt="Card Preview" />
+    </section>
+
+    <h3 class="section-title">SUBSCRIPTION LIST</h3>
+
+    <div class="list">
+      <div class="item">
+        <span>NETFLIX</span>
+        <button>PAY NOW</button>
+        <span>₹499 / month</span>
+      </div>
+
+      <div class="item">
+        <span>SPOTIFY</span>
+        <button>PAY NOW</button>
+        <span>₹129 / month</span>
+      </div>
+
+      <div class="item">
+        <span>CULT</span>
+        <button>PAY NOW</button>
+        <span>₹12000 / year</span>
+      </div>
+
+      <div class="item">
+        <span>ZEE TV</span>
+        <button>PAY NOW</button>
+        <span>₹799 / month</span>
+      </div>
+    </div>
   </main>
-
-</div>
-
-<!-- 🔗 BACKEND LINK -->
-<script>
-  fetch("http://localhost:8080/subscriptions")
-    .then(response => response.json())
-    .then(subscriptions => {
-      const list = document.querySelector(".subscriptions");
-
-      subscriptions.forEach(sub => {
-        const item = document.createElement("div");
-        item.className = "subscription-item";
-
-        item.innerHTML = `
-          <span class="sub-name">${sub.name}</span>
-          <div class="sub-actions">
-            <span class="sub-price">${sub.amount}/${sub.billingCycle}</span>
-            <a href="confirm-payment.html" class="btn small-btn">PAY NOW</a>
-            <button class="delete-btn">delete subscription</button>
-          </div>
-        `;
-
-        list.appendChild(item);
-      });
-    })
-    .catch(err => {
-      console.error("Error loading subscriptions", err);
-    });
-</script>
-
 </body>
 </html>
