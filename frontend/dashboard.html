@@ -33,12 +33,12 @@
     </p>
   </aside>
 
-  <!-- MAIN AREA -->
+  <!-- MAIN -->
   <main class="dashboard-main">
 
-    <!-- FIXED HEADER -->
+    <!-- HEADER -->
     <header class="dashboard-header">
-      <div class="header-text">
+      <div>
         <h2>Hello Mehar,</h2>
         <p class="muted">good to see you again</p>
       </div>
@@ -46,34 +46,45 @@
       <img src="assets/lp3.png" alt="Card preview" class="header-card" />
     </header>
 
-    <!-- SCROLLING LIST ONLY -->
+    <!-- SUBSCRIPTION LIST -->
     <section class="subscriptions">
       <h3>SUBSCRIPTION LIST</h3>
 
-      <!-- ONE ITEM (REPEATS FROM BACKEND DATA) -->
-      <div class="subscription-item">
-        <span class="sub-name">NETFLIX</span>
-
-        <div class="sub-actions">
-          <span class="sub-price">499/month</span>
-
-          <a href="confirm-payment.html" class="btn small-btn">
-            PAY NOW
-          </a>
-
-          <button class="delete-btn">
-            delete subscription
-          </button>
-        </div>
-      </div>
-
-      <!-- MORE ITEMS WILL RENDER HERE -->
+      <!-- ITEMS WILL BE INSERTED HERE FROM BACKEND -->
 
     </section>
 
   </main>
 
 </div>
+
+<!-- 🔗 BACKEND LINK -->
+<script>
+  fetch("http://localhost:8080/subscriptions")
+    .then(response => response.json())
+    .then(subscriptions => {
+      const list = document.querySelector(".subscriptions");
+
+      subscriptions.forEach(sub => {
+        const item = document.createElement("div");
+        item.className = "subscription-item";
+
+        item.innerHTML = `
+          <span class="sub-name">${sub.name}</span>
+          <div class="sub-actions">
+            <span class="sub-price">${sub.amount}/${sub.billingCycle}</span>
+            <a href="confirm-payment.html" class="btn small-btn">PAY NOW</a>
+            <button class="delete-btn">delete subscription</button>
+          </div>
+        `;
+
+        list.appendChild(item);
+      });
+    })
+    .catch(err => {
+      console.error("Error loading subscriptions", err);
+    });
+</script>
 
 </body>
 </html>
