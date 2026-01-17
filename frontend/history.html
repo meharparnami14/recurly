@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Payment History – Recurly</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter&family=Unna&family=Libre+Caslon+Display&family=Anonymous+Pro&display=swap" rel="stylesheet">
+
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #000;
+      font-family: "Inter", sans-serif;
+      color: #fff;
+    }
+
+    .logo {
+      position: absolute;
+      top: 40px;
+      left: 60px;
+      font-family: "Libre Caslon Display", serif;
+      letter-spacing: 2px;
+      font-size: 22px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 140px 40px 80px;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: "Unna", serif;
+      font-size: 34px;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      opacity: 0.7;
+      margin-bottom: 48px;
+    }
+
+    /* LIST */
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-bottom: 48px;
+    }
+
+    .history-item {
+      background: linear-gradient(180deg, #141414 0%, #2F2F2F 100%);
+      border-radius: 14px;
+      padding: 16px 22px;
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .name {
+      text-align: left;
+      font-family: "Unna", serif;
+      letter-spacing: 0.5px;
+    }
+
+    .date {
+      opacity: 0.7;
+    }
+
+    .amount {
+      font-family: "Anonymous Pro", monospace;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 36px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #C9A66B 0%, #9E7C3E 100%);
+      color: #000;
+      font-family: "Anonymous Pro", monospace;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo">RECURY</div>
+
+  <div class="container">
+    <h1>VIEW HISTORY</h1>
+    <p class="subtitle">
