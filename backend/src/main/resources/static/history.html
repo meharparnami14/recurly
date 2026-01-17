@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Payment History – Recurly</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter&family=Unna&family=Libre+Caslon+Display&family=Anonymous+Pro&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="center-page">
+  <div class="card wide">
+
+    <h1 class="logo">RECURY</h1>
+
+    <h2>Payment History</h2>
+    <p class="muted">All your completed subscription payments</p>
+
+    <div id="history-list">
+      <!-- Payments from backend will appear here -->
+    </div>
+
+    <a href="dashboard.html" class="btn full-btn">BACK TO DASHBOARD</a>
+
+  </div>
+</div>
+
+<script>
+  fetch("http://localhost:8080/payments")
+    .then(res => res.json())
+    .then(payments => {
+      const list = document.getElementById("history-list");
+
+      payments.forEach(p => {
+        const row = document.createElement("div");
+        row.className = "history-item";
+
+        row.innerHTML = `
+          <span>${p.subscriptionName}</span>
+          <span>₹${p.amount}</span>
+          <span>${p.paymentDate}</span>
+        `;
+
+        list.appendChild(row);
+      });
+    })
+    .catch(err => {
+      console.error("Error loading history", err);
+    });
+</script>
+
+</body>
+</html>

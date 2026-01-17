@@ -1,0 +1,31 @@
+# Compiled class files
+*.class
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# Maven
+backend/target/
+target/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# H2 Database files
+*.db
+data/
+
+# Logs
+*.log
+
+# Misc
+nul

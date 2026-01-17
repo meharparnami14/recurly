@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Confirm Payment – Recurly</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter&family=Unna&family=Libre+Caslon+Display&family=Anonymous+Pro&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="center-page">
+  <div class="card">
+
+    <h1 class="logo">RECURY</h1>
+
+    <h2>Confirm Payment</h2>
+    <p class="muted">Review the details before confirming payment</p>
+
+    <p><strong>Subscription:</strong> Netflix</p>
+    <p><strong>Amount:</strong> ₹499</p>
+
+    <button class="btn full-btn" onclick="confirmPayment()">
+      CONFIRM PAYMENT
+    </button>
+
+    <a href="dashboard.html" class="btn link-btn">CANCEL</a>
+
+  </div>
+</div>
+
+<script>
+  function confirmPayment() {
+    const payment = {
+      subscriptionName: "Netflix",
+      amount: 499
+    };
+
+    fetch("http://localhost:8080/payments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payment)
+    })
+    .then(() => {
+      window.location.href = "success.html";
+    })
+    .catch(err => {
+      console.error("Error confirming payment", err);
+    });
+  }
+</script>
+
+</body>
+</html>

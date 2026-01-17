@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Track Spending – Recurly</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter&family=Unna&family=Libre+Caslon+Display&family=Anonymous+Pro&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="center-page">
+  <div class="card wide">
+
+    <h1 class="logo">RECURY</h1>
+
+    <h2>Track Spending</h2>
+    <p class="muted">Your subscription spending breakdown</p>
+
+    <canvas id="spendingChart" width="400" height="400"></canvas>
+
+    <a href="dashboard.html" class="btn full-btn">BACK TO DASHBOARD</a>
+
+  </div>
+</div>
+
+<script>
+  fetch("http://localhost:8080/payments/spending")
+    .then(res => res.json())
+    .then(data => {
+      const labels = Object.keys(data);
+      const values = Object.values(data);
+
+      const ctx = document.getElementById("spendingChart").getContext("2d");
+
+      new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: labels,
+          datasets: [{
+            data: values,
+            backgroundColor: [
+              "#E6C27A",  // soft gold
+              "#C9A66B",  // primary gold (your main)
+              "#9E7C3E",  // deep gold
+              "#7A5F2E",  // bronze gold
+              "#5A461F"   // dark antique gold
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          plugins: {
+            legend: {
+              labels: {
+                color: "#ffffff",
+                font: {
+                  family: "Inter",
+                  size: 12
+                }
+              }
+            }
+          }
+        }
+      });
+    })
+    .catch(err => {
+      console.error("Error loading spending data", err);
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Subscription – Recurly</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter&family=Unna&family=Libre+Caslon+Display&family=Anonymous+Pro&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="center-page">
+  <div class="card">
+
+    <h1 class="logo">RECURY</h1>
+
+    <h2>Add Subscription</h2>
+    <p class="muted">Enter the details of the subscription you want to track</p>
+
+    <input id="name" type="text" placeholder="Subscription Name" />
+    <input id="billing" type="text" placeholder="Billing Cycle (monthly/yearly)" />
+    <input id="amount" type="number" placeholder="Amount" />
+    <input id="date" type="text" placeholder="Next Payment Date" />
+
+    <button class="btn full-btn" onclick="addSubscription()">
+      ADD SUBSCRIPTION
+    </button>
+
+    <a href="dashboard.html" class="btn link-btn">BACK TO DASHBOARD</a>
+
+  </div>
+</div>
+
+<script>
+  function addSubscription() {
+    const subscription = {
+      name: document.getElementById("name").value,
+      billingCycle: document.getElementById("billing").value,
+      amount: document.getElementById("amount").value,
+      nextPaymentDate: document.getElementById("date").value
+    };
+
+    fetch("http://localhost:8080/subscriptions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(subscription)
+    })
+    .then(() => {
+      window.location.href = "dashboard.html";
+    })
+    .catch(err => {
+      console.error("Error adding subscription", err);
+    });
+  }
+</script>
+
+</body>
+</html>
