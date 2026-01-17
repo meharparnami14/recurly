@@ -6,128 +6,56 @@
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter&family=Unna&family=Libre+Caslon+Display&family=Anonymous+Pro&display=swap" rel="stylesheet">
-
-  <style>
-    /* RESET */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      min-height: 100vh;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: "Inter", sans-serif;
-      color: #fff;
-    }
-
-    .card {
-      width: 420px;
-      padding: 40px 36px;
-      border-radius: 18px;
-      background: linear-gradient(180deg, #141414 0%, #2F2F2F 100%);
-    }
-
-    .logo {
-      font-family: "Libre Caslon Display", serif;
-      font-size: 32px;
-      letter-spacing: 2px;
-      margin-bottom: 24px;
-      text-align: center;
-    }
-
-    h2 {
-      font-family: "Unna", serif;
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      font-size: 13px;
-      opacity: 0.7;
-      margin-bottom: 28px;
-    }
-
-    .form-group {
-      margin-bottom: 18px;
-    }
-
-    label {
-      display: block;
-      font-size: 12px;
-      margin-bottom: 6px;
-      opacity: 0.8;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 8px;
-      border: none;
-      background: #1f1f1f;
-      color: #fff;
-      font-size: 14px;
-      outline: none;
-    }
-
-    input::placeholder {
-      color: #777;
-    }
-
-    .btn {
-      margin-top: 24px;
-      width: 100%;
-      padding: 14px;
-      border-radius: 10px;
-      border: 1px solid #fff;
-      background: transparent;
-      color: #fff;
-      font-size: 14px;
-      letter-spacing: 1px;
-      font-family: "Anonymous Pro", monospace;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+<div class="center-page">
   <div class="card">
-    <div class="logo">RECURY</div>
+
+    <h1 class="logo">RECURY</h1>
 
     <h2>Add Subscription</h2>
-    <p class="subtitle">Enter the details of the subscription you want to track</p>
+    <p class="muted">Enter the details of the subscription you want to track</p>
 
-    <div class="form-group">
-      <label>Subscription Name</label>
-      <input type="text" placeholder="NETFLIX" />
-    </div>
+    <input id="name" type="text" placeholder="Subscription Name" />
+    <input id="billing" type="text" placeholder="Billing Cycle (monthly/yearly)" />
+    <input id="amount" type="number" placeholder="Amount" />
+    <input id="date" type="text" placeholder="Next Payment Date" />
 
-    <div class="form-group">
-      <label>Billing Cycle</label>
-      <input type="text" placeholder="Monthly / Yearly" />
-    </div>
-
-    <div class="form-group">
-      <label>Amount</label>
-      <input type="text" placeholder="₹499" />
-    </div>
-
-    <div class="form-group">
-      <label>Next Payment Date</label>
-      <input type="text" placeholder="12 March 2026" />
-    </div>
-
-    <!-- LINKING -->
-    <a href="dashboard.html" class="btn">
+    <button class="btn full-btn" onclick="addSubscription()">
       ADD SUBSCRIPTION
-    </a>
+    </button>
+
+    <a href="dashboard.html" class="btn link-btn">BACK TO DASHBOARD</a>
+
   </div>
+</div>
+
+<script>
+  function addSubscription() {
+    const subscription = {
+      name: document.getElementById("name").value,
+      billingCycle: document.getElementById("billing").value,
+      amount: document.getElementById("amount").value,
+      nextPaymentDate: document.getElementById("date").value
+    };
+
+    fetch("http://localhost:8080/subscriptions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(subscription)
+    })
+    .then(() => {
+      window.location.href = "dashboard.html";
+    })
+    .catch(err => {
+      console.error("Error adding subscription", err);
+    });
+  }
+</script>
 
 </body>
 </html>
