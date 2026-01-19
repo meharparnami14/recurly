@@ -18,10 +18,14 @@
     <h2>Confirm Payment</h2>
     <p class="muted">Review the details before confirming payment</p>
 
-    <p><strong>Subscription:</strong> Netflix</p>
-    <p><strong>Amount:</strong> ₹499</p>
+    <div id="payment-details">
+      <p><strong>Subscription:</strong> <span id="sub-name">Netflix</span></p>
+      <p><strong>Amount:</strong> ₹<span id="sub-amount">499</span></p>
+    </div>
 
-    <button class="btn full-btn" onclick="confirmPayment()">
+    <div id="message"></div>
+
+    <button class="btn full-btn" onclick="confirmPayment()" id="confirmBtn">
       CONFIRM PAYMENT
     </button>
 
@@ -31,24 +35,52 @@
 </div>
 
 <script>
+  // Get payment details from URL parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const subscriptionName = urlParams.get('name') || 'Netflix';
+  const amount = urlParams.get('amount') || '499';
+
+  // Update the display
+  document.getElementById('sub-name').textContent = subscriptionName;
+  document.getElementById('sub-amount').textContent = amount;
+
   function confirmPayment() {
+    const confirmBtn = document.getElementById('confirmBtn');
+    const messageDiv = document.getElementById('message');
+
+    // Disable button and show loading state
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'PROCESSING...';
+    messageDiv.innerHTML = '';
+
     const payment = {
-      subscriptionName: "Netflix",
-      amount: 499
+      subscriptionName: subscriptionName,
+      amount: parseFloat(amount),
+      paymentDate: new Date().toISOString().split('T')[0] // Current date in YYYY-MM-DD format
     };
 
-    fetch("http://localhost:8080/payments", {
+    fetch("/payments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(payment)
     })
+    .then(res => {
+      if (!res.ok) throw new Error('Payment failed');
+      return res.json();
+    })
     .then(() => {
-      window.location.href = "success.html";
+      messageDiv.innerHTML = '<div class="success-message">Payment successful!</div>';
+      setTimeout(() => {
+        window.location.href = "success.html";
+      }, 1000);
     })
     .catch(err => {
       console.error("Error confirming payment", err);
+      messageDiv.innerHTML = '<div class="error-message">Payment failed. Please try again.</div>';
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = 'CONFIRM PAYMENT';
     });
   }
 </script>

@@ -18,14 +18,18 @@
     <h2>Add Subscription</h2>
     <p class="muted">Enter the details of the subscription you want to track</p>
 
-    <input id="name" type="text" placeholder="Subscription Name" />
-    <input id="billing" type="text" placeholder="Billing Cycle (monthly/yearly)" />
-    <input id="amount" type="number" placeholder="Amount" />
-    <input id="date" type="text" placeholder="Next Payment Date" />
+    <div id="message"></div>
 
-    <button class="btn full-btn" onclick="addSubscription()">
-      ADD SUBSCRIPTION
-    </button>
+    <form id="subscriptionForm" onsubmit="addSubscription(event)">
+      <input id="name" type="text" placeholder="Subscription Name" required />
+      <input id="billing" type="text" placeholder="Billing Cycle (monthly/yearly)" required />
+      <input id="amount" type="number" placeholder="Amount" step="0.01" required />
+      <input id="date" type="text" placeholder="Next Payment Date (e.g., 2024-12-31)" required />
+
+      <button type="submit" class="btn full-btn" id="submitBtn">
+        ADD SUBSCRIPTION
+      </button>
+    </form>
 
     <a href="dashboard.html" class="btn link-btn">BACK TO DASHBOARD</a>
 
@@ -33,26 +37,54 @@
 </div>
 
 <script>
-  function addSubscription() {
+  function addSubscription(event) {
+    event.preventDefault();
+
+    const submitBtn = document.getElementById('submitBtn');
+    const messageDiv = document.getElementById('message');
+
+    // Disable button and show loading state
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'ADDING...';
+    messageDiv.innerHTML = '';
+
     const subscription = {
-      name: document.getElementById("name").value,
-      billingCycle: document.getElementById("billing").value,
-      amount: document.getElementById("amount").value,
-      nextPaymentDate: document.getElementById("date").value
+      name: document.getElementById("name").value.trim(),
+      billingCycle: document.getElementById("billing").value.trim(),
+      amount: parseFloat(document.getElementById("amount").value),
+      nextPaymentDate: document.getElementById("date").value.trim()
     };
 
-    fetch("http://localhost:8080/subscriptions", {
+    // Basic validation
+    if (!subscription.name || !subscription.billingCycle || !subscription.amount) {
+      messageDiv.innerHTML = '<div class="error-message">Please fill in all fields</div>';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'ADD SUBSCRIPTION';
+      return;
+    }
+
+    fetch("/subscriptions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(subscription)
     })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to add subscription');
+      return res.json();
+    })
     .then(() => {
-      window.location.href = "dashboard.html";
+      messageDiv.innerHTML = '<div class="success-message">Subscription added successfully!</div>';
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 1000);
     })
     .catch(err => {
       console.error("Error adding subscription", err);
+      messageDiv.innerHTML = '<div class="error-message">Failed to add subscription. Please try again.</div>';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'ADD SUBSCRIPTION';
     });
   }
 </script>

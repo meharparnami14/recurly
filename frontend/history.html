@@ -19,7 +19,9 @@
     <p class="muted">All your completed subscription payments</p>
 
     <div id="history-list">
-      <!-- Payments from backend will appear here -->
+      <div class="loading-container">
+        <div class="loading"></div>
+      </div>
     </div>
 
     <a href="dashboard.html" class="btn full-btn">BACK TO DASHBOARD</a>
@@ -28,26 +30,38 @@
 </div>
 
 <script>
-  fetch("http://localhost:8080/payments")
-    .then(res => res.json())
-    .then(payments => {
-      const list = document.getElementById("history-list");
+  const historyList = document.getElementById("history-list");
 
-      payments.forEach(p => {
+  fetch("/payments")
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to load payment history');
+      return res.json();
+    })
+    .then(payments => {
+      historyList.innerHTML = '';
+
+      if (payments.length === 0) {
+        historyList.innerHTML = '<div class="empty-state"><p>No payment history yet</p></div>';
+        return;
+      }
+
+      payments.forEach((p, index) => {
         const row = document.createElement("div");
         row.className = "history-item";
+        row.style.animationDelay = `${index * 0.1}s`;
 
         row.innerHTML = `
           <span>${p.subscriptionName}</span>
           <span>₹${p.amount}</span>
-          <span>${p.paymentDate}</span>
+          <span>${p.paymentDate || 'N/A'}</span>
         `;
 
-        list.appendChild(row);
+        historyList.appendChild(row);
       });
     })
     .catch(err => {
       console.error("Error loading history", err);
+      historyList.innerHTML = '<div class="error-message">Failed to load payment history. Please try again later.</div>';
     });
 </script>
 
