@@ -26,4 +26,10 @@ public class SubscriptionController {
     public Subscription addSubscription(@RequestBody Subscription subscription) {
         return repository.save(subscription);
     }
+
+    // Delete Subscription
+    @DeleteMapping("/{id}")
+    public void deleteSubscription(@PathVariable Long id) {
+        repository.deleteById(id);
+    }
 }

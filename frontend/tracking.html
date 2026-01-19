@@ -21,7 +21,11 @@
     <h2>Track Spending</h2>
     <p class="muted">Your subscription spending breakdown</p>
 
-    <canvas id="spendingChart" width="400" height="400"></canvas>
+    <div id="chart-container">
+      <div class="loading-container">
+        <div class="loading"></div>
+      </div>
+    </div>
 
     <a href="dashboard.html" class="btn full-btn">BACK TO DASHBOARD</a>
 
@@ -29,12 +33,23 @@
 </div>
 
 <script>
-  fetch("http://localhost:8080/payments/spending")
-    .then(res => res.json())
+  const chartContainer = document.getElementById("chart-container");
+
+  fetch("/payments/spending")
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to load spending data');
+      return res.json();
+    })
     .then(data => {
       const labels = Object.keys(data);
       const values = Object.values(data);
 
+      if (labels.length === 0) {
+        chartContainer.innerHTML = '<div class="empty-state"><p>No spending data available yet</p></div>';
+        return;
+      }
+
+      chartContainer.innerHTML = '<canvas id="spendingChart" width="400" height="400"></canvas>';
       const ctx = document.getElementById("spendingChart").getContext("2d");
 
       new Chart(ctx, {
@@ -45,10 +60,12 @@
             data: values,
             backgroundColor: [
               "#E6C27A",  // soft gold
-              "#C9A66B",  // primary gold (your main)
+              "#C9A66B",  // primary gold
               "#9E7C3E",  // deep gold
               "#7A5F2E",  // bronze gold
-              "#5A461F"   // dark antique gold
+              "#5A461F",  // dark antique gold
+              "#d4b06a",  // your main gold
+              "#a88544"   // darker gold
             ],
             borderWidth: 0
           }]
@@ -61,15 +78,37 @@
                 font: {
                   family: "Inter",
                   size: 12
+                },
+                padding: 15
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#d4b06a',
+              bodyColor: '#fff',
+              borderColor: '#d4b06a',
+              borderWidth: 1,
+              padding: 12,
+              displayColors: true,
+              callbacks: {
+                label: function(context) {
+                  return ' ₹' + context.parsed.toFixed(2);
                 }
               }
             }
+          },
+          animation: {
+            animateScale: true,
+            animateRotate: true,
+            duration: 1000,
+            easing: 'easeOutQuart'
           }
         }
       });
     })
     .catch(err => {
       console.error("Error loading spending data", err);
+      chartContainer.innerHTML = '<div class="error-message">Failed to load spending data. Please try again later.</div>';
     });
 </script>
 

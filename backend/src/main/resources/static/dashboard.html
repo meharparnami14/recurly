@@ -43,35 +43,66 @@
 
     <h3 class="section-title">SUBSCRIPTION LIST</h3>
 
-    <div class="subscription">
-      <span>NETFLIX</span>
-      <span>499/month</span>
-      <a href="confirm-payment.html" class="pay">PAY NOW</a>
-      <span class="delete">delete subscription</span>
-    </div>
-
-    <div class="subscription">
-      <span>SPOTIFY</span>
-      <span>129/month</span>
-      <a href="confirm-payment.html" class="pay">PAY NOW</a>
-      <span class="delete">delete subscription</span>
-    </div>
-
-    <div class="subscription">
-      <span>CULT</span>
-      <span>12000/year</span>
-      <a href="confirm-payment.html" class="pay">PAY NOW</a>
-      <span class="delete">delete subscription</span>
-    </div>
-
-    <div class="subscription">
-      <span>ZEE TV</span>
-      <span>799/month</span>
-      <a href="confirm-payment.html" class="pay">PAY NOW</a>
-      <span class="delete">delete subscription</span>
+    <div id="subscription-list">
+      <div class="loading-container">
+        <div class="loading"></div>
+      </div>
     </div>
 
   </main>
+
+<script>
+  const subscriptionList = document.getElementById("subscription-list");
+
+  fetch("/subscriptions")
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to load subscriptions');
+      return res.json();
+    })
+    .then(subscriptions => {
+      subscriptionList.innerHTML = '';
+
+      if (subscriptions.length === 0) {
+        subscriptionList.innerHTML = '<div class="empty-state"><p>No subscriptions yet. Add one to get started!</p></div>';
+        return;
+      }
+
+      subscriptions.forEach((sub, index) => {
+        const div = document.createElement("div");
+        div.className = "subscription";
+        div.style.animationDelay = `${index * 0.1}s`;
+
+        div.innerHTML = `
+          <span>${sub.name}</span>
+          <span>₹${sub.amount}/${sub.billingCycle}</span>
+          <a href="confirm-payment.html?name=${encodeURIComponent(sub.name)}&amount=${sub.amount}" class="pay">PAY NOW</a>
+          <span class="delete" onclick="deleteSubscription(${sub.id})">delete subscription</span>
+        `;
+
+        subscriptionList.appendChild(div);
+      });
+    })
+    .catch(err => {
+      console.error("Error loading subscriptions", err);
+      subscriptionList.innerHTML = '<div class="error-message">Failed to load subscriptions. Please try again later.</div>';
+    });
+
+  function deleteSubscription(id) {
+    if (!confirm('Are you sure you want to delete this subscription?')) return;
+
+    fetch(`/subscriptions/${id}`, {
+      method: 'DELETE'
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to delete subscription');
+      location.reload();
+    })
+    .catch(err => {
+      console.error("Error deleting subscription", err);
+      alert('Failed to delete subscription. Please try again.');
+    });
+  }
+</script>
 
 </body>
 </html>
